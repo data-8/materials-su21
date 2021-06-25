@@ -1,0 +1,1 @@
+test = {'name': 'q2_3', 'points': [2], 'suites': [{'cases': [{'code': '>>> index_of_last_element\n141', 'hidden': False, 'locked': False}], 'scored': True, 'setup': '', 'teardown': '', 'type': 'doctest'}]}
