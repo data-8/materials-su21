@@ -1,0 +1,629 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "2026f92a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from datascience import *\n",
+    "import numpy as np\n",
+    "\n",
+    "import matplotlib.pyplot as plots\n",
+    "%matplotlib inline\n",
+    "plots.style.use('fivethirtyeight')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a2603bec",
+   "metadata": {},
+   "source": [
+    "# Line Plots"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5f252a77",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "all_coins = Table.read_table(\"prices.csv\")\n",
+    "all_coins"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "7ce37531",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Just Doge?\n",
+    "doge = all_coins.where(\"Currency\", \"DOGE\")\n",
+    "doge"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "0367d70e",
+   "metadata": {},
+   "source": [
+    "## tbl.plot(x_axis, y_axis)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ce368ffb",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Doge Closing in the past year\n",
+    "doge.plot(\"Day\", \"Closing Price (USD)\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5172061e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Name the plot?\n",
+    "# 1. plots.title(...)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3be97b69",
+   "metadata": {},
+   "source": [
+    "## Percent Change"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c2c5fb8f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "opens = doge.column(\"24h Open (USD)\")\n",
+    "closes = doge.column(\"Closing Price (USD)\")\n",
+    "# Next day - previous day\n",
+    "differences = closes - opens\n",
+    "percents = differences / opens * 100"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ac29daf5",
+   "metadata": {
+    "scrolled": false
+   },
+   "outputs": [],
+   "source": [
+    "with_percents = doge.select(\"Day\").with_column(\"Percent Change\", percents)\n",
+    "with_percents.plot(\"Day\", \"Percent Change\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "281cb2bd",
+   "metadata": {},
+   "source": [
+    "### Watch out for the Y axis!"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5efce8c3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "all_coins.where(\"Currency\", \"USDT\").plot(\"Day\", \"24h Open (USD)\")\n",
+    "#plots.yticks([0,1.1])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "64dfc63f",
+   "metadata": {},
+   "source": [
+    "# Scatter Plots"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "f34f177c",
+   "metadata": {},
+   "source": [
+    "## tbl.scatter(x_axis, y_axis)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "eacc47c4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "doge.scatter(\"24h High (USD)\", \"24h Low (USD)\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8753783e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "doge.scatter(\"24h Open (USD)\", \"Closing Price (USD)\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "1c0deceb",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "## Doge vs Bitcoin?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5fee53d5",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "btc = all_coins.where(\"Currency\", \"BTC\")\n",
+    "btc"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b0571385",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "btc_doge = btc.with_column(\"Doge 24h Open (USD)\", doge.column(\"24h Open (USD)\"))\n",
+    "btc_doge.show(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "647417ba",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "btc_doge.relabeled(\"24h Open (USD)\", \"BTC 24h Open (USD)\").scatter(\"BTC 24h Open (USD)\", \"Doge 24h Open (USD)\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "766381ae",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Go to Slides"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "54d03ab0",
+   "metadata": {},
+   "source": [
+    "# Bar Charts"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "313d475d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "market_caps = Table.read_table(\"market_caps.csv\")\n",
+    "market_caps"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "11e21ef7",
+   "metadata": {},
+   "source": [
+    "## tbl.barh(\"Categorical Variable\", \"Numerical Variable\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a82ef435",
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "market_caps.barh(\"Symbol\", \"Market Cap\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "10f03cd3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Alphabetic order?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "05c7c615",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "market_caps.sort(\"Symbol\").barh(\"Symbol\", \"Market Cap\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5c8dec43",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# What's the x axis?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3c71e122",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "market_caps.relabeled(\"Market Cap\", \"Market Cap (Billions of $)\").barh(1, 2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "bf2f3e40",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Barh questions?"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bfb599cf",
+   "metadata": {},
+   "source": [
+    "# Overlaid Charts"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6b819e02",
+   "metadata": {},
+   "source": [
+    "### Line Plots"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d9598dd9",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Doge past 7 days"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c32bc25a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "doge_last_week = doge.where(\"Day\", are.above(364-7))\n",
+    "doge_last_week"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a6edf84f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "doge_last_week.drop(\"Currency\", \"Date\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c96fceeb",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "doge_last_week.drop(\"Currency\", \"Date\").plot(\"Day\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9f5728cd",
+   "metadata": {},
+   "source": [
+    "### Scatter Plots"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "42885655",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "all_coins"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "119f7308",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "all_coins.scatter(\"24h High (USD)\", \"24h Low (USD)\", group=\"Currency\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "764ab4bf",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "not_btc = all_coins.where(\"Currency\", are.not_equal_to('BTC'))\n",
+    "not_btc.scatter(\"24h High (USD)\", \"24h Low (USD)\", group=\"Currency\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "69953f29",
+   "metadata": {},
+   "source": [
+    "### Bar Charts"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c8950178",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "most_recent = all_coins.where(\"Day\", 364)\n",
+    "# We're going to learn this later!\n",
+    "joined = market_caps.join(\"Symbol\", most_recent, \"Currency\").select(\"Symbol\", \"Closing Price (USD)\", \"Market Cap\")\n",
+    "joined"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5c160cc7",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "joined.barh(\"Symbol\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "31a47f8f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Hard to interpret that, let's look at some other coins"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ef3e693d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "stable_coins = make_array(\"USDT\", \"USDC\")\n",
+    "joined.where(\"Symbol\", are.contained_in(stable_coins)).barh(\"Symbol\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "4cd8ee89",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Questions / back to slides for discussion qs"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ce0fb4ba",
+   "metadata": {},
+   "source": [
+    "# Categorical Distributions"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3b64a418",
+   "metadata": {},
+   "source": [
+    "### tbl.group(column)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "4ab65f82",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "market_caps"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "25f84e8c",
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "market_caps.group(\"Stable Coin\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d8d1d41a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "market_caps.group(\"Stable Coin\").barh(\"Stable Coin\", \"count\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ccd3d16b",
+   "metadata": {},
+   "source": [
+    "# Numerical Distributions"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "f90cf857",
+   "metadata": {},
+   "source": [
+    "### tbl.bin(\"Numerical Values\", bins=arr)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "67159348",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "btc_close = all_coins.where(\"Currency\", \"BTC\").select(\"Closing Price (USD)\")\n",
+    "btc_close.show(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "aa974cc6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "btc_close.bin(\"Closing Price (USD)\").show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "11691ab6",
+   "metadata": {
+    "scrolled": false
+   },
+   "outputs": [],
+   "source": [
+    "btc_close.bin(\"Closing Price (USD)\", bins=np.arange(0, 70001, 10000)).show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "77b22807",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "binned = btc_close.bin(\"Closing Price (USD)\", bins=np.arange(0, 70001, 10000))\n",
+    "sum(binned.column(1))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3d8b279d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "non_uniform_bins = make_array(0, 35000, 50000, 67000)\n",
+    "btc_close.bin(\"Closing Price (USD)\", bins=non_uniform_bins)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0a2c1a22",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "not_all_bins = np.arange(0, 45001, 5000)\n",
+    "btc_close.bin(\"Closing Price (USD)\", bins=not_all_bins).show()\n",
+    "sum(btc_close.bin(\"Closing Price (USD)\", bins=not_all_bins).column(1))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "7739f233",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
