@@ -1,0 +1,11 @@
+test = {   'name': 'q2_4',
+    'points': [0, 0, 0],
+    'suites': [   {   'cases': [   {'code': '>>> # The first column should be \'Cell\', containing the cell names\n>>> "Cell" == dense_matrix.labels[0]\nTrue', 'hidden': False, 'locked': False},
+                                   {   'code': '>>> # The other columns should contain names of genes\n>>> "Cftr" in dense_matrix.labels and "Asgr1" in dense_matrix.labels\nTrue',
+                                       'hidden': False,
+                                       'locked': False},
+                                   {'code': '>>> # The values should be expression numbers\n>>> type(dense_matrix.column("Stap1").item(0)) in (float, int)\nTrue', 'hidden': False, 'locked': False}],
+                      'scored': True,
+                      'setup': '',
+                      'teardown': '',
+                      'type': 'doctest'}]}
