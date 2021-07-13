@@ -1,0 +1,10 @@
+test = {   'name': 'q3_3',
+    'points': None,
+    'suites': [   {   'cases': [   {'code': '>>> len(tvds) == 1000\nTrue', 'hidden': False, 'locked': False},
+                                   {'code': '>>> np.round(np.average(tvds), 2) == 0.14\nTrue', 'hidden': False, 'locked': False},
+                                   {'code': ">>> # The tvds shouldn't all be the same!\n>>> np.std(tvds) > 0\nTrue", 'hidden': False, 'locked': False},
+                                   {'code': '>>> tvd_empirical_P > 0.1\nTrue', 'hidden': False, 'locked': False}],
+                      'scored': True,
+                      'setup': '',
+                      'teardown': '',
+                      'type': 'doctest'}]}
